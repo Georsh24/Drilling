@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNE</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="./node_modules/js-datepicker/dist/datepicker.min.css">
+    <link rel="stylesheet" href="./css.css">
+    <link rel="stylesheet" href="./node_modules/@fortawesome/fontawesome-free/css/all.css">
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+
+    <!-- Se Inserta Qna Proceso-->
+    <div class="container-fluid ml-3 mr-3">
+
+
+        <div class="footer1">
+            <nav class="navbar navbar-light" style="background-color: #ffffff;">
+                <form class="container-fluid">
+                    <div class="input-group">
+
+                        <select class="form-select" aria-label="Default select example" name="qna"
+                            style="margin-left: 10px;">
+                        </select>
+                        <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus"
+                            data-bs-content="Agregar una nueva quincena para trabajar">
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                                data-bs-target="#modalQna" style="margin-left: 10px;">Agregar Quincena <span
+                                    style="color: #BBDEFb; margin-left: 5px;"><i
+                                        class="fa-solid fa-calendar-days"></i></span></button>
+                        </span>
+
+                        <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus"
+                            data-bs-content="Exporta productos finales">
+                            <button type="button" class="btn btn-success" onclick="exportaExcel()"
+                                style="margin-left: 10px;">Exportar <span style="color: green; margin-left: 5px;"><i
+                                        class="fa-solid fa-file-excel"></i></span></button>
+                        </span>
+
+                        <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus"
+                            data-bs-content="Agregar un nuevo empleado al sistema">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#modalNuevoEmpleado" style="margin-left: 10px;">Agregar Empleado
+                                <span style="color: blue; margin-left: 5px;"><i
+                                        class="fa-solid fa-user"></i></span></button>
+                        </span>
+                        <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus"
+                            data-bs-content="Agregar Faltas por archivo">
+                            <button type="button" class="btn btn-primary" style="margin-left: 10px;" id="notifyBtn" onclick="openventanaFaltas()" >Faltas</button>
+                        </span>
+                    </div>
+                </form>
+            </nav>
+
+        </div>
+        <br> <br> <br>
+        <!--<div class="input-group" style="width: 300px;  position: static; margin-top: 20px; margin-bottom: 20px; ">
+            <select class="form-select" aria-label="Default select example" name ="qna">
+            </select>
+
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalQna">Agregar Quincena</button>
+        </div>-->
+
+
+        <!-- Modal qna-proc -->
+        <div class="modal fade" id="modalQna" tabindex="-1" aria-labelledby="modalQnaLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalQnaLabel">Agrega Quincena <span
+                                style="color: #BBDEFb; margin-left: 5px;"><i class="fa-solid fa-calendar-days"></i></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group mb-2 ">
+                            <span class="input-group-text ml-3"> QNA Proceso </span>
+                            <input type="text" maxlength="6" minlength="6" class="form-control text-uppercase"
+                                placeholder="Qna_proc" aria-label="" name="qna_proc" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar <span
+                                style="color: red; margin-left: 5px;"><i class="fa-solid fa-xmark"></i> </span></button>
+                        <button type="button" class="btn btn-primary" onclick="addQnaProc()">Guardar <span
+                                style="color: blue; margin-left: 5px;"><i
+                                    class="fa-solid fa-floppy-disk"></i></span></button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalQna2" tabindex="-1" aria-labelledby="modalQnaLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="">Resumen <span style="color: green; margin-left: 5px;"><i
+                                    class="fa-solid fa-file-lines"></i></span></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class=" container">
+                            <div row class="mainTableResumen">
+                                <div class="col-md-12">
+                                    <table class="table table-sm ">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" style=" text-align: center;">P/D</th>
+
+                                                <th scope="col" style=" text-align: center;">Concepto</th>
+                                                <th scope="col" style=" text-align: center;">Importe</th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tabla_resumen">
+                                        </tbody>
+                                    </table>
+
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <h5> <strong>Total de Percepciones: </strong> <span>$</span><span
+                                        id="TotalPercepciones"></span> </h5>
+                                <h5> <strong>Total de Deducciones: </strong> <span>$</span><span
+                                        id="TotalDeducciones"></span> </h5>
+                                <h5> <strong>Total Neto: </strong> <span>$</span><span id="TotalNeto"></span> </h5>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar <span
+                                style="color: red; margin-left: 5px;"><i class="fa-solid fa-xmark"></i> </span></button>
+                        <!--  <button type="button" class="btn btn-primary" onclick="addQnaProc()">Guardar <a>💾</a></button>-->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="modalNuevoConcepto" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="modalNuevoConceptoLabel" aria-hidden="true">
+            <div class="modal-dialog  modal-xl modal-lg">
+                <div class="modal-content">
+                    <form id="form-item" action="">
+                        <div class="modal-header">
+                            <!--Titulo-->
+                            <h5 class="modal-title" id="modalNuevoConceptoLabel">Concepto <span style="color: blue;"><i
+                                        class="fa-solid fa-user"></i></span></h5>
+                            <!-- Boton X-->
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <!-- Cuerpo de Modal-->
+                        <div class="modal-body">
+                            <div class="input-group mb-3 ">
+                                <input type="hidden" name="id_concepto" value="0">
+                                <input type="hidden" name="num_cons" value="0">
+                                <!--RFC-->
+                                <span class="input-group-text ml-3"> RFC </span>
+                                <input type="text" class="form-control text-uppercase" placeholder="RFC" aria-label=""
+                                    name="rfc" maxlength="13" required>
+                                <!--CURP-->
+                                <span class="input-group-text ml-3" style="margin-left: 10px;"> CURP </span>
+                                <input type="text" class="form-control text-uppercase" placeholder="CURP" aria-label=""
+                                    name="curp" maxlength="18" required>
+                            </div>
+                            <div class="input-group mb-3 ">
+                                <!--Nombre-->
+                                <span class="input-group-text ml-3"> Nombre </span>
+                                <input type="text" class="form-control text-uppercase" placeholder="Nombre"
+                                    aria-label="" name="nombre" required>
+                            </div>
+                            <div class="input-group mb-3 ">
+                                <!--Apellidos-->
+                                <span class="input-group-text ml-3"> Apellidos </span>
+                                <input type="text" class="form-control text-uppercase" placeholder="Apellido Paterno"
+                                    aria-label="" name="apellido1" required>
+                                <input type="text" class="form-control text-uppercase" placeholder="Apellido Materno"
+                                    aria-label="" name="apellido2" style="margin-left: 10px;">
+                            </div>
+                            <div class="input-group mb-3 ">
+                                <!--Categoria-->
+                                <span class="input-group-text ml-3"> Categoría </span>
+                                <input type="text" class="form-control text-uppercase" placeholder="Categoría"
+                                    aria-label="" name="categoria" required>
+                            </div>
+
+
+
+                            <div class="input-group mb-3 ">
+                                <!--Totales-->
+                                <span class="input-group-text ml-3"> Percepciones </span>
+                                <input type="text" class="form-control text-uppercase" placeholder="Percepciones"
+                                    aria-label="" name="tot_perc_cheque" value="0" required>
+                                <span class="input-group-text ml-3" style="margin-left: 10px;"> Deducciones </span>
+                                <input type="text" class="form-control text-uppercase" placeholder="Deducciones"
+                                    aria-label="" name="tot_ded_cheque" value="0" required>
+                                <span class="input-group-text ml-3" style="margin-left: 10px;"> Neto </span>
+                                <input type="text" class="form-control text-uppercase" placeholder="Neto" aria-label=""
+                                    name="tot_net_cheque" value="0" required>
+                            </div>
+                            <hr>
+
+                            <div action="" class="min_footer" id="formCptos">
+                                <div class="input-group">
+                                    <div class="form-group col-md-3" style="margin-left: 20px;">
+                                        <div class="input-group mb-4">
+                                            <div class="input-group-prepend oculta">
+                                                <div class="input-group-text">P/D</div>
+                                            </div>
+                                            <input type="text" class="form-control text-uppercase" maxlength="1"
+                                                name="percded" placeholder="Percepción/Deducción">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-3" style="margin-left: 20px;">
+                                        <div class="input-group mb-4">
+                                            <div class="input-group-prepend oculta">
+                                                <div class="input-group-text">#</div>
+                                            </div>
+                                            <input type="text" class="form-control text-uppercase" maxlength="2"
+                                                name="cpto" placeholder="Concepto">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-3 " style="margin-left: 20px;">
+                                        <div class="input-group mb-4">
+                                            <div class="input-group-prepend oculta">
+                                                <div class="input-group-text">$</div>
+                                            </div>
+                                            <input type="text" class="form-control text-uppercase" name="importe"
+                                                placeholder="Importe">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-2" style="margin-left: 20px;">
+                                        <div class="input-group mb-4">
+                                            <button id="add" type="button"
+                                                class="form-control btn btn-success">Agregar</button>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-6" name="divElements" style="width: 50%;"></div>
+                                            <div class="col-6" name="div2Elements" style="width: 50%;"></div>
+
+                                            <!--<div class="col-6">.col-6</div>-->
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <!--Botones Modal-->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar
+                                <span style="color: red; margin-left: 5px;"><i class="fa-solid fa-xmark"></i>
+                                </span></button>
+                            <button class="btn btn-primary" type="submit">Guardar <span
+                                    style="color: blue; margin-left: 5px;"><i
+                                        class="fa-solid fa-floppy-disk"></i></span></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal Empleado -->
+        <div class="modal fade" id="modalNuevoEmpleado" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="modalNuevoEmpleadoLabel" aria-hidden="true">
+            <div class="modal-dialog  modal-xl">
+                <div class="modal-content">
+                    <form id="form-item-empleado" action="">
+                        <div class="modal-header">
+                            <!--Titulo-->
+                            <h5 class="modal-title" id="modalNuevoEmpleadoLabel">Empleado <a>👤</a></h5>
+                            <!-- Boton X-->
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <!-- Cuerpo de Modal-->
+                        <div class="modal-body">
+                            <div class="input-group mb-3 ">
+                                <input type="hidden" name="id_empleado_empleado" value="0">
+                                <!--RFC--  <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Filiacion de la persona"></span>-->
+
+                                <span class="input-group-text ml-3"> RFC </span>
+                                <input type="text" class="form-control text-uppercase" placeholder="RFC" aria-label=""
+                                    name="rfc_empleado" maxlength="13" required>
+                                <!--CURP-->
+                                <span class="input-group-text ml-3" style="margin-left: 10px;"> CURP </span>
+                                <input type="text" class="form-control text-uppercase" placeholder="CURP" aria-label=""
+                                    name="curp_empleado" maxlength="18" required>
+                            </div>
+                            <div class="input-group mb-3 ">
+                                <!--Nombre-->
+                                <span class="input-group-text ml-3"> Nombre </span>
+                                <input type="text" class="form-control text-uppercase" placeholder="Nombre"
+                                    aria-label="" name="nombre_empleado" required>
+                            </div>
+                            <div class="input-group mb-3 ">
+                                <!--Apellidos-->
+                                <span class="input-group-text ml-3"> Apellidos </span>
+                                <input type="text" class="form-control text-uppercase" placeholder="Apellido Paterno"
+                                    aria-label="" name="apellido1_empleado" required>
+                                <input type="text" class="form-control text-uppercase" placeholder="Apellido Materno"
+                                    aria-label="" name="apellido2_empleado" style="margin-left: 10px;">
+                            </div>
+                            <div class="input-group mb-3 ">
+                                <!--Categoria-->
+                                <span class="input-group-text ml-3"> Categoría </span>
+                                <input type="text" class="form-control text-uppercase" placeholder="Categoría"
+                                    aria-label="" name="categoria_empleado" required>
+                            </div>
+                            <div class="input-group mb-3 ">
+                                <!-- Estatus-->
+                                <span class="input-group-text ml-3"> Estatus </span>
+                                <select class="form-select" aria-label="Default select example"
+                                    name="act_inact_empleado">
+                                    <option value="A">Activo</option>
+                                    <option value="I">Inactivo</option>
+
+                                </select>
+                                <!--Inicio-->
+                                <span class="input-group-text ml-3" style="margin-left: 10px;"> Inicio </span>
+
+                                <input type="text" class="form-control fechaEmpleado" placeholder="Inicio" aria-label=""
+                                    name="ini_real_empleado" readonly required>
+                            </div>
+
+                        </div>
+                        <!--Botones Modal-->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar
+                                <span style="color: red; margin-left: 5px;"><i class="fa-solid fa-xmark"></i>
+                                </span></button>
+                            <button class="btn btn-primary" type="submit">Guardar <span
+                                    style="color: blue; margin-left: 5px;"><i
+                                        class="fa-solid fa-floppy-disk"></i></span></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!--Tabla Inicio-->
+        <div row class="mainTable">
+            <div class="col-md-12">
+                <table class="table table-sm ">
+                    <thead>
+                        <tr>
+                            <th scope="col" style=" text-align: center;">RFC</th>
+                            <!--<th scope="col">CURP</th>-->
+                            <th scope="col" style=" text-align: center;">Nombre</th>
+                            <!--<th scope="col">Apellido1</th>
+                    <th scope="col">Apellido2</th>-->
+                            <th scope="col" style=" text-align: center;">Categoría</th>
+                            <th scope="col" style=" text-align: center;">Estatus</th>
+                            <!--  <th scope="col">Ini_real</th>-->
+                            <th scope="col" style=" text-align: center;">Empleado</th>
+                            <th scope="col" style=" text-align: center;">Pagos</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="table_datos_empleados">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" style=" text-align: center;">RFC</th>
+                            <!--<th scope="col">CURP</th>-->
+                            <th scope="col" style=" text-align: center;">Nombre</th>
+                            <th scope="col" style=" text-align: center;">Percepciones</th>
+                            <!--<th scope="col">Apellido1</th>
+                            <th scope="col">Apellido2</th>-->
+                            <th scope="col" style=" text-align: center;">Deducciones</th>
+                            <!--    <th scope="col">Estatus</th>
+                            <th scope="col">Ini_real</th>-->
+                            <th scope="col" style=" text-align: center;">Neto</th>
+                            <th scope="col" style=" text-align: center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table_datos">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="alertP" id="liveAlertPlaceholder"></div>
+    </div>
+    <!--Botones-->
+
+
+
+    <div class="footer">
+        <!--<nav class="navbar navbar-light bg-light">
+                <form class="container-fluid">
+                  <div class="input-group">
+                    
+                    <select class="form-select" aria-label="Default select example" name ="qna" style="margin-left: 10px;">
+                    </select>
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalQna" style="margin-left: 10px;">Agregar Quincena</button>
+                    <button type="button" class="btn btn-success" onclick="exporta()" style="margin-left: 10px;">Exportar <a>📄</a></button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevoEmpleado" style="margin-left: 10px;">Agregar Empleado <a>👤</a></button>
+                  </div>
+                </form>
+              </nav>-->
+    </div>
+
+
+    <script>
+
+        function openventanaFaltas(){
+            var { ipcRenderer, shell } = require('electron')
+            ipcRenderer.send('open-ventanaFaltas')
+
+        }
+
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+
+
+        // Alert Config
+        const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+        const alert = (message, type) => {
+
+
+
+            let wrapper = document.createElement('div')
+            wrapper.innerHTML = [
+                `<div class="alert alert-${type} alert-dismissible fade show" role="alert">`,
+                `   <div>${message}</div>`,
+                '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+                '</div>'
+            ].join('')
+            alertPlaceholder.append(wrapper)
+
+            setTimeout(function () {
+                bootstrap.Alert.getOrCreateInstance(document.querySelector('.alert')).close()
+            }, 5000)
+
+
+        }
+
+
+
+        //Calendario
+        var { ipcRenderer, shell } = require('electron')
+        const datepicker = require('js-datepicker')
+        const fs = require('fs');
+
+        const pickerEmpleado = datepicker('.fechaEmpleado', {
+            customMonths: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            customDays: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+            overlayButton: "Aceptar",
+            formatter: (input, date, instance) => {
+                const value = date.toLocaleDateString('en-CA');//'en-ZA'
+                //input.value = value 
+                input.value = value.replaceAll('-', '')
+
+            }
+        })
+
+
+
+
+    </script>
+    <script src="./ipcRender.js"></script>
+    <script src="./empleado.js"></script>
+    <script src="./conceptos.js"></script>
+    <script src="./exportar.js"></script>
+
+     <script src="./importaExcel.js"></script>
+    <!-- <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script> -->
+</body>
+
+</html>
